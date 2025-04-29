@@ -264,4 +264,25 @@ export async function updateTherapistProfilePicture(req, res) {
     return res.status(500).json({ message: "Server error while updating profile picture!" });
   }
 }
+
+export async function getOneTherapist(req, res){
+  
+  try{
+    const id = req.params.id;
+
+    const therapist = await Therapist.findOne({_id: id})
+
+    if (!therapist) {
+      return res.status(404).json({ message: "Therapist not found" });
+    }
+
+    return res.json(therapist);
+  }
+  catch(err){
+    console.error(err)
+    return res.status(500).json({message : "Error in getting therapist"})
+  }
+}
+
+
   
