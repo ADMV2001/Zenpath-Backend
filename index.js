@@ -9,6 +9,7 @@ import therapistRouter from "./routes/therapistRouter.js";
 import router from './routes/basicInfoRouter.js';
 import phqRouter from './routes/phqResultRouter.js';
 import profileRouter from "./routes/profileRouter.js";
+import sessionRouter from './routes/sessionRouter.js';
 
 dotenv.config();
 
@@ -53,6 +54,8 @@ app.use("/api/therapist",therapistRouter);
 app.use("/api/basic", router);
 app.use("/api/phq", phqRouter);
 app.use("/api/profile", profileRouter);
+app.use('/api/session', sessionRouter);
+
 
 
 app.listen(5000,()=>{
