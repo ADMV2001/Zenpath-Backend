@@ -4,7 +4,10 @@ import {
   loginPatient,
   sendOTP,
   verifyOtp,
-  getPatientDetails
+  getPatientDetails,
+  getDashboardPatient,
+  updatePatientProfile,
+  changePatientPassword
 } from "../controllers/patientController.js";
 
 const patientRouter = express.Router();
@@ -14,5 +17,8 @@ patientRouter.post("/login",              loginPatient);
 patientRouter.post("/send_otp",           sendOTP);
 patientRouter.post("/verify_patient_email", verifyOtp);
 patientRouter.post("/get_patient", getPatientDetails);
+patientRouter.get("/get_dashboard_patient", getDashboardPatient);
+patientRouter.put("/update_patient", updatePatientProfile);
+patientRouter.put("/change_patient_password", changePatientPassword);
 
 export default patientRouter;

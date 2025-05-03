@@ -185,4 +185,70 @@ export async function loginPatient(req, res) {
 
   }
 
+  export async function getDashboardPatient(req, res) {
+    if (!req.user) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const userId = req.user.id;
+  
+    try {
+      const patient = await Patient.findById(userId).select("-password"); // Don't send password
+      if (!patient) {
+        return res.status(404).json({ message: "Patient not found" });
+      }
+      res.json(patient);
+    } catch (error) {
+      console.error("Error fetching patient data:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+
+  export async function updatePatientProfile(req, res) {
+
+    if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+
+    const userId = req.user.id;
+    const { name, mobile } = req.body;
+
+    try {
+      const updated = await Patient.findByIdAndUpdate(
+        userId,
+        { name, mobile },
+        { new: true }
+      ).select("-password");
+      res.json({ message: "Profile updated successfully.", patient: updated });
+
+    } catch (err) {
+      res.status(500).json({ message: "Error updating profile." });
+    }
+  }
+
+
+  export async function changePatientPassword(req, res) {
+    
+    if (!req.user) return res.status(401).json({ message: "Unauthorized" });
+
+    const userId = req.user.id;
+    const { currentPassword, newPassword } = req.body;
+  
+    if (!currentPassword || !newPassword)
+      return res.status(400).json({ message: "All fields are required." });
+  
+    try {
+      const patient = await Patient.findById(userId);
+      if (!patient) return res.status(404).json({ message: "Patient not found." });
+  
+      const isMatch = await bcrypt.compare(currentPassword, patient.password);
+      if (!isMatch)
+        return res.status(400).json({ message: "Current password is incorrect." });
+  
+      patient.password = bcrypt.hashSync(newPassword, 10);
+      await patient.save();
+  
+      res.json({ message: "Password updated successfully." });
+    } catch (err) {
+      res.status(500).json({ message: "Error updating password." });
+    }
+  }
+  
   
