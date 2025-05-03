@@ -1,5 +1,7 @@
 import Patient from '../models/patientModel.js';
 import Therapist from '../models/therapistModel.js';
+import PhqResult from '../models/phqResultModel.js';
+import BasicInfo from '../models/basicInfoModel.js';
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
@@ -157,6 +159,30 @@ export async function loginPatient(req, res) {
     );
     
     res.json({ message: "Email verified successfully!" });
+  }
+
+  export async function getPatientDetails(req, res) {
+    if (req.user == null) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const userId = req.body.userId._id;
+    try{
+    const [basicInfo, patient, phqResults] = await Promise.all([
+      BasicInfo.findOne({ userId }),
+      Patient.findById(userId),
+      PhqResult.find({ userId })
+    ]);
+    res.json({
+      basicInfo,
+      patient,
+      phqResults
+    });
+
+  } catch (error) {
+    console.error("Error fetching user data:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+
   }
 
   

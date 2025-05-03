@@ -31,7 +31,7 @@ export async function getMySessionRequests(req, res) {
 export async function getTherapistSessionRequests(req, res) {
     try {
       const therapistId = req.user.id;
-      const requests = await SessionRequest.find({ therapistId }).populate('userId');
+      const requests = await SessionRequest.find({ therapistId,status:"Pending" }).populate('userId');
       res.json(requests);
     } catch (err) {
       res.status(500).json({ message: err.message });
@@ -58,6 +58,49 @@ export async function updateSessionRequestStatus(req, res) {
     }
 }
 
+export async function acceptReq(req, res) {
+  if (req.user == null) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  const { requestId } = req.body;
+
+  try {
+    await SessionRequest.updateOne(
+      { _id: requestId },
+      { $set: { status: "Accepted" } }
+    );
+    return res.json({ message: "Request accepted successfully!" });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+}
+
+export async function rejectReq(req, res) {
+  if (req.user == null) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const { requestId } = req.body;
+  try {
+    await SessionRequest.updateOne(
+      { _id: requestId },
+      { $set: { status: "Rejected" } }
+    );
+    return res.json({ message: "Request Rejected Successfully!" });
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+}
+
+export async function getTherapistPatientRequests(req, res) {
+  try {
+    const therapistId = req.user.id;
+    const requests = await SessionRequest.find({ therapistId,status:"Accepted" }).populate('userId');
+    res.json(requests);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
 
   
   
