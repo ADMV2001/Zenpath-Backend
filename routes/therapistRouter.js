@@ -24,5 +24,4 @@ therapistRouter.post("/sendPendingEmail", sendPendingReqEmail)
 therapistRouter.get("/me", getCurrentTherapist)
 therapistRouter.get("/updateTherapistProfilePicture", updateTherapistProfilePicture);
 therapistRouter.get("/getTherapist/:id", getOneTherapist)
-
 export default therapistRouter;
