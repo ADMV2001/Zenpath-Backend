@@ -136,4 +136,17 @@ export async function setSession(req, res) {
 }
 }
 
+export async function getTherapistSessions(req,res){
+  if (req.user == null) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  const therapistId = req.user.id;
+  try {
+    const sessions = await Session.find({ therapistId }).sort({ sessionDate: 1, sessionTime: 1 }).populate('userId');
+    res.json(sessions);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
   
