@@ -92,6 +92,16 @@ export async function rejectReq(req, res) {
   }
 }
 
+export async function getTherapistPatientRequests(req, res) {
+  try {
+    const therapistId = req.user.id;
+    const requests = await SessionRequest.find({ therapistId,status:"Accepted" }).populate('userId');
+    res.json(requests);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+
   
   
 
