@@ -1,4 +1,5 @@
 import SessionRequest from '../models/sessionRequestModel.js';
+import Session  from '../models/sessionModel.js';
 
 export async function createSessionRequest(req, res) {
   try {
@@ -102,7 +103,37 @@ export async function getTherapistPatientRequests(req, res) {
   }
 }
 
+export async function setSession(req, res) {
+  if (req.user == null) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
   
-  
+    const therapistId = req.user.id;
+    const { userId,sessionDate,sessionTime,sessionDuration,sessionType,sessionNote} = req.body;
+    const roomName="Room"+Date.now();
+    const state="Pending";
+    console.log("therapistId",therapistId);
+    console.log("duration",sessionDuration);
+    console.log("session data",userId,sessionDate,sessionTime,sessionDuration,sessionType,sessionNote,roomName,state);
+
+    const existingSession = await Session.findOne({
+      therapistId,
+      sessionDate,
+      sessionTime
+    });
+
+    if (existingSession) {
+      return res.status(400).json({ message: "You already have a session at this time" });
+    }else{
+      try {
+    const session = new Session({therapistId,userId,sessionDate,sessionTime,state,roomName,sessionDuration,sessionNote,sessionType });
+    await session.save();
+    res.status(201).json({ message: "Session Added" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: err.message });
+  }
+}
+}
 
   
