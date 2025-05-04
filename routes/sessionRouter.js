@@ -1,5 +1,15 @@
 import express from 'express';
-import { createSessionRequest, getMySessionRequests, getTherapistSessionRequests, updateSessionRequestStatus , acceptReq , rejectReq, getTherapistPatientRequests,setSession} from '../controllers/sessionController.js';
+import { createSessionRequest, 
+    getMySessionRequests, 
+    getTherapistSessionRequests, 
+    updateSessionRequestStatus , 
+    acceptReq , 
+    rejectReq, 
+    getTherapistPatientRequests,
+    setSession, 
+    getRecentPatientSessions,
+    getAllSessionsForPatient
+} from '../controllers/sessionController.js';
 
 const sessionRouter = express.Router();
 
@@ -25,6 +35,10 @@ sessionRouter.get("/gettherapistpatients", getTherapistPatientRequests);
 
 //therapist set a session
 sessionRouter.post("/addsession",setSession);
+
+sessionRouter.get("/get_upcoming_sessions", getRecentPatientSessions)
+
+sessionRouter.get("/get_all_sessions", getAllSessionsForPatient) 
 
 
 export default sessionRouter;
