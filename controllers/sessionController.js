@@ -177,4 +177,65 @@ export async function getAllSessionsForPatient(req, res){
   }
 }
 
-  
+export async function getSingleSession(req, res){
+  try {
+    const { sessionId } = req.body;
+    const session = await Session.findById(sessionId)
+      .populate('userId').populate('therapistId');;
+    if (!session) {
+      return res.status(404).json({ message: "Session not found." });
+    }
+    res.json(session);
+  }
+  catch (err) {
+    res.status(500).json({ message: "Error fetching session." });
+  }
+}
+
+
+export async function updateSessionState(req, res){
+  try {
+    const { sessionId, state } = req.body;
+    
+    const session = await Session.findByIdAndUpdate(sessionId, { state }, { new: true });
+    if (!session) {
+      return res.status(404).json({ message: "Session not found." });
+    }
+    res.json(session);   
+  }
+  catch (err) {
+    res.status(500).json({ message: "Error updating session state." });
+  }
+}
+
+export async function prevSessions(req, res){
+  try {
+    const therapistId = req.user.id; 
+    const state = "Started";
+    const sessions = await Session.findOne({ therapistId,state }).populate('userId');
+    if (!sessions) {
+      res.json({isprevSession:false});
+    }
+    else{
+      res.json({isprevSession:true,sessions});
+    }
+  }
+  catch (err) {
+    res.status(500).json({ message: "Error fetching recent sessions." });
+  }
+}
+
+export async function finishSession(req, res){
+  try {
+    const { sessionId } = req.body;
+    const state = "Finished";
+    const session = await Session.findByIdAndUpdate(sessionId, { state }, { new: true });
+    if (!session) {
+      return res.status(404).json({ message: "Session not found." });
+    }
+    res.json(session);   
+  }
+  catch (err) {
+    res.status(500).json({ message: "Error updating session state." });
+  }
+}
