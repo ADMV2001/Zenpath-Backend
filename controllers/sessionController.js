@@ -154,9 +154,8 @@ export async function getTherapistSessions(req,res){
 export async function getRecentPatientSessions(req, res) {
   try {
     const userId = req.user.id; 
-    const sessions = await Session.find({ userId })
+    const sessions = await Session.find({ userId , state: "Confirmed" || "Started"})
       .sort({ sessionDate: -1, sessionTime: -1 }) 
-      .limit(4)
       .populate('therapistId', 'name email profilePicture'); 
 
     res.json(sessions);
@@ -169,7 +168,7 @@ export async function getAllSessionsForPatient(req, res){
   try{
     const userId = req.user.id; 
     const allSessions = await Session.find({ userId })
-      .populate('therapistId', 'name email profilePicture');
+      .populate('therapistId', 'name email profilePicture').populate('userId', 'name email')
     res.json(allSessions); 
   }
   catch(err){
