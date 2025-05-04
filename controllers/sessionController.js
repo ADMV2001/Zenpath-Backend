@@ -136,6 +136,7 @@ export async function setSession(req, res) {
 }
 }
 
+
 export async function getTherapistSessions(req,res){
   if (req.user == null) {
     return res.status(401).json({ message: "Unauthorized" });
@@ -146,6 +147,33 @@ export async function getTherapistSessions(req,res){
     res.json(sessions);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+}
+
+
+export async function getRecentPatientSessions(req, res) {
+  try {
+    const userId = req.user.id; 
+    const sessions = await Session.find({ userId })
+      .sort({ sessionDate: -1, sessionTime: -1 }) 
+      .limit(4)
+      .populate('therapistId', 'name email profilePicture'); 
+
+    res.json(sessions);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching recent sessions." });
+  }
+}
+
+export async function getAllSessionsForPatient(req, res){
+  try{
+    const userId = req.user.id; 
+    const allSessions = await Session.find({ userId })
+      .populate('therapistId', 'name email profilePicture');
+    res.json(allSessions); 
+  }
+  catch(err){
+    res.status(500).json({ message: "Error fetching all sessions." });
   }
 }
 
