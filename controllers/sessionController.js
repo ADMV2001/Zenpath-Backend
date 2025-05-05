@@ -238,3 +238,19 @@ export async function finishSession(req, res){
     res.status(500).json({ message: "Error updating session state." });
   }
 }
+
+export async function getPatientTherapist(req,res){
+  if (req.user == null) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  try {
+    console.log("getPatientTherapist");
+    const userId = req.user.id; 
+    console.log("userId",userId);
+    const acceptedreq = await SessionRequest.find({ userId , status:"Accepted"}).populate('therapistId')
+    res.json(acceptedreq);
+  }
+  catch (err) {
+    res.status(500).json({ message: "Error fetching recent sessions." });
+  }
+}

@@ -11,6 +11,7 @@ import phqRouter from './routes/phqResultRouter.js';
 import profileRouter from "./routes/profileRouter.js";
 import sessionRouter from './routes/sessionRouter.js';
 import walletRouter from "./routes/walletRouter.js";
+import chatRouter from "./routes/chatRouter.js";
 
 dotenv.config();
 
@@ -56,7 +57,8 @@ app.use("/api/basic", router);
 app.use("/api/phq", phqRouter);
 app.use("/api/profile", profileRouter);
 app.use('/api/session', sessionRouter);
-app.use('/api/wallet', walletRouter)
+app.use('/api/wallet', walletRouter);
+app.use('/api/chat', chatRouter);
 
 
 
