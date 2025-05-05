@@ -1,6 +1,6 @@
 // therapistRouter.js
 import express from 'express';
-import { registerTherapist, loginTherapist, getPendingTherapists, approveTherapist, getApprovedTherapists, sendPendingReqEmail, rejectTherapist, getCurrentTherapist, updateTherapistProfilePicture, getOneTherapist } from '../controllers/therapistController.js';
+import { registerTherapist, loginTherapist, getPendingTherapists, approveTherapist, getApprovedTherapists, sendPendingReqEmail, rejectTherapist, getCurrentTherapist, updateTherapistProfilePicture, getOneTherapist, deleteTherapist } from '../controllers/therapistController.js';
 import upload from '../middleware/uploadMiddleware.js';
 
 const therapistRouter = express.Router();
@@ -24,5 +24,6 @@ therapistRouter.post("/sendPendingEmail", sendPendingReqEmail)
 therapistRouter.get("/me", getCurrentTherapist)
 therapistRouter.get("/updateTherapistProfilePicture", updateTherapistProfilePicture);
 therapistRouter.get("/getTherapist/:id", getOneTherapist)
+therapistRouter.delete("/delete_therapist/:id", deleteTherapist)
 
 export default therapistRouter;

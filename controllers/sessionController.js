@@ -238,3 +238,39 @@ export async function finishSession(req, res){
     res.status(500).json({ message: "Error updating session state." });
   }
 }
+
+export async function acceptSession(req, res) {
+  try {
+    const { sessionId } = req.body;
+    const state = "Confirmed";
+
+    const session = await Session.findByIdAndUpdate(sessionId, { state }, { new: true });
+
+    if (!session) {
+      return res.status(404).json({ message: "Session not found." });
+    }
+
+    res.json(session);
+  } catch (err) {
+    res.status(500).json({ message: "Error updating session state." });
+  }
+}
+
+export async function deleteSession(req, res){
+  const { id } = req.params;
+
+  try {
+    const deletedSession = await SessionRequest.findByIdAndDelete(id);
+
+    if (!deletedSession) {
+      return res.status(404).json({ message: "Session request not found" });
+    }
+
+    res.status(200).json({ message: "Session request deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting session request:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
+
