@@ -284,5 +284,22 @@ export async function getOneTherapist(req, res){
   }
 }
 
+export async function deleteTherapist(req, res){
+  const { id } = req.params;
+
+  try {
+    const deletedTherapist = await Therapist.findByIdAndDelete(id);
+
+    if (!deletedTherapist) {
+      return res.status(404).json({ message: "Therapist not found" });
+    }
+
+    res.status(200).json({ message: "Therapist deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting therapist:", error);
+    res.status(500).json({ message: "Server error" });
+  }
+}
+
 
   

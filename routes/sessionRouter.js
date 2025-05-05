@@ -1,5 +1,5 @@
 import express from 'express';
-import { createSessionRequest, getMySessionRequests, getTherapistSessionRequests, updateSessionRequestStatus , acceptReq , rejectReq, getTherapistPatientRequests,setSession,getTherapistSessions , getRecentPatientSessions,getAllSessionsForPatient,getSingleSession,updateSessionState,prevSessions,finishSession,getPatientTherapist} from '../controllers/sessionController.js';
+import { createSessionRequest, getMySessionRequests, getTherapistSessionRequests, updateSessionRequestStatus , acceptReq , rejectReq, getTherapistPatientRequests,setSession,getTherapistSessions , getRecentPatientSessions,getAllSessionsForPatient,getSingleSession,updateSessionState,prevSessions,finishSession,getPatientTherapist,acceptSession, deleteSession,getReccentSessions} from '../controllers/sessionController.js';
 
 const sessionRouter = express.Router();
 
@@ -42,6 +42,12 @@ sessionRouter.get("/prevSessions",prevSessions);
 sessionRouter.post("/finishSession",finishSession)
 
 sessionRouter.get("/getacceptedReqs",getPatientTherapist);
+
+sessionRouter.post("/accept_session_request", acceptSession)
+
+sessionRouter.delete("/delete_session_request/:id", deleteSession)
+
+sessionRouter.get("/getReccentSessions", getReccentSessions)
 
 
 

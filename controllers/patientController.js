@@ -203,6 +203,19 @@ export async function loginPatient(req, res) {
     }
   }
 
+  export async function getAllPatients(req, res) {
+    try {
+      const patients = await Patient.find().select("-password"); // exclude passwords
+      if (!patients.length) {
+        return res.status(404).json({ message: "No patients found" });
+      }
+      res.status(200).json(patients);
+    } catch (error) {
+      console.error("Error fetching all patients:", error);
+      res.status(500).json({ message: "Server error" });
+    }
+  }
+
   export async function updatePatientProfile(req, res) {
 
     if (!req.user) return res.status(401).json({ message: "Unauthorized" });
@@ -222,6 +235,7 @@ export async function loginPatient(req, res) {
       res.status(500).json({ message: "Error updating profile." });
     }
   }
+
 
 
   export async function changePatientPassword(req, res) {
@@ -248,6 +262,23 @@ export async function loginPatient(req, res) {
       res.json({ message: "Password updated successfully." });
     } catch (err) {
       res.status(500).json({ message: "Error updating password." });
+    }
+
+  }
+  export async function deletePatient(req, res){
+    const { id } = req.params;
+  
+    try {
+      const deletedPatient = await Patient.findByIdAndDelete(id);
+  
+      if (!deletedPatient) {
+        return res.status(404).json({ message: "Patient not found" });
+      }
+  
+      res.status(200).json({ message: "Patient deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting patient:", error);
+      res.status(500).json({ message: "Server error" });
     }
   }
   
