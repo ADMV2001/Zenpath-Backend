@@ -14,9 +14,32 @@ export async function getPatientWallet(req, res) {
   res.json(wallet);
 }
 
+export async function getTherapistWallet(req, res) {
+  const userId = req.user.id;
+
+  let wallet = await Wallet.findOne({ userId });
+
+  if (!wallet) {
+    wallet = await Wallet.create({ userId, coins: 0 });
+  }
+  res.json(wallet);
+}
+
 export async function addCoins(req, res) {
     const userId = req.user.id;
     const { coins } = req.body;
+  
+    const wallet = await Wallet.findOneAndUpdate(
+      { userId },
+      { $inc: { coins } },
+      { new: true }
+    );
+  
+    res.json(wallet);
+  }
+
+export async function addCoinsToTherapist(req, res) {
+    const { userId, coins } = req.body;
   
     const wallet = await Wallet.findOneAndUpdate(
       { userId },
