@@ -305,3 +305,40 @@ export async function getReccentSessions(req,res){
     res.status(500).json({ message: "Error fetching recent sessions." });
   }
 }
+export async function getPendingSessionCount(req,res){
+  try {
+    if (req.user == null) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+    const userId = req.user.id; 
+    const sessions = await Session.countDocuments({ userId, state:"Pending"});
+    if (!sessions) {
+      return res.status(404).json({ message: "Session not found." });
+    }
+    res.json(sessions);
+  }
+  catch (err) {
+    res.status(500).json({ message: "Error fetching recent sessions." });
+  }
+}
+
+export async function getSessionHours(req,res){
+  try{
+    if(req.user == null){
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
+    const therapistId = req.user.id;
+    const sessions = await Session.find({ therapistId, state: "Finished" });
+    let totDuration = 0;
+    sessions.forEach(session => {
+      let sessionDuration= parseInt(session.sessionDuration);
+      totDuration += sessionDuration;
+    }
+  )
+  res.json({totDuration})
+  }
+  catch(err){
+    res.status(500).json({ message: "Error fetching session hours." });
+  }
+}
